@@ -79,4 +79,8 @@ data class NotiData(
     val alertOnce: Boolean = true,
     val foregroundBehavior: ForegroundBehavior = ForegroundBehavior.FOREGROUND_SERVICE_DEFAULT,
     val specialType: NotiFunType = { this }
-)
+) {
+    companion object {
+        val default = NotiData()
+    }
+}

@@ -14,7 +14,6 @@ import androidx.core.app.NotificationCompat
 import com.example.utilities.notificationManager.IntentFunctions
 import com.example.utilities.notificationManager.NotiData
 import com.example.utilities.notificationManager.NotiImportance
-import com.example.utilities.notificationManager.NotiTypes
 import kotlin.random.Random
 
 
@@ -48,7 +47,7 @@ data class NotiChannelData(
     val displayName: String = channelId,
     val description: String = "",
     val importance: NotiImportance = NotiImportance.DEFAULT,
-    val notiData: NotiData = NotiData()
+    val notiData: NotiData = NotiData.default
 ) {
     fun createChannel(context: Context) = NotiChannel.createChannel(context, this@NotiChannelData)
     fun Context.createChannel() = NotiChannel.createChannel(this@createChannel, this@NotiChannelData)
@@ -101,20 +100,20 @@ class NotiChannel private constructor(
 
     fun createNotification(
         notiId: Int = Random.nextInt(),
-        notiFunction: NotiData.() -> Unit = {}
-    ): Noti = Noti(notiId, notiFunction)
+        instanceNotiData: NotiData? = null
+    ): Noti = Noti(notiId, instanceNotiData)
 
 
     inner class Noti(
         val notiId: Int = Random.nextInt(),
-        notiFunction: NotiData.() -> Unit = {}
+        instanceNotiData: NotiData? = null
     ) {
-        private var _instanceNotiData = notiData.copy().apply(notiFunction)
+        private var _instanceNotiData = instanceNotiData ?: notiData
 
 
 
-        constructor(nameId: String, notiFunction: NotiData.() -> Unit = {}):
-                this(nameId.hashCode(), notiFunction)
+        constructor(nameId: String, instanceNotiData: NotiData? = null):
+                this(nameId.hashCode(), instanceNotiData)
 
 
         private fun build(
